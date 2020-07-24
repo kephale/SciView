@@ -100,7 +100,7 @@ public class ControlsParameters
 
         //synchronize with the current state of the controls
         if (fpsCameraControl != null) {
-            fpsCameraControl.setMouseSpeedMultiplier(mouseSpeedMult);
+            //fpsCameraControl.setMouseSpeedMultiplier(mouseSpeedMult);
         }
     }
 
@@ -178,7 +178,7 @@ public class ControlsParameters
             arcballCameraControl.setMouseSpeedMultiplier(mouseSpeedMult);
         }
         if (fpsCameraControl != null) {
-            fpsCameraControl.setMouseSpeedMultiplier(mouseSpeedMult);
+            //fpsCameraControl.setMouseSpeedMultiplier(mouseSpeedMult);
         }
     }
 

@@ -4,16 +4,36 @@
 # travis-build.sh - A script to build and/or release SciJava-based projects.
 #
 
+# take args from CLI
+#key=$1
+#iv=$2
+
+# hardcoded for sciview config
+key=$encrypted_eb7aa63bf7ac_key
+iv=$encrypted_eb7aa63bf7ac_iv
+
 dir="$(dirname "$0")"
 
 success=0
 checkSuccess() {
 	# Log non-zero exit code.
-	test $1 -eq 0 || echo "==> FAILED: EXIT CODE $1" 1>&2
+	test $key -eq 0 || echo "==> FAILED: EXIT CODE $key" 1>&2
 
 	# Record the first non-zero exit code.
-	test $success -eq 0 && success=$1
+	test $success -eq 0 && success=$key
 }
+
+echo "= Setup conda environment ="
+wget https://raw.githubusercontent.com/trichter/conda4travis/latest/conda4travis.sh -O conda4travis.sh
+source conda4travis.sh
+
+condaEnv=sciview
+test -d "$condaDir/envs/$condaEnv" && condaAction=update || condaAction=create
+conda env "$condaAction" -n "$condaEnv" -f environment.yml &&
+conda activate "$condaEnv"
+
+echo "= Java version ="
+java -version
 
 # Build Maven projects.
 if [ -f pom.xml ]
@@ -124,8 +144,8 @@ EOL
 
 	# Import the GPG signing key.
 	keyFile=.travis/signingkey.asc
-	key=$1
-	iv=$2
+	key=$key
+	iv=$iv
 	if [ "$key" -a "$iv" -a -f "$keyFile.enc" ]
 	then
 		# NB: Key and iv values were given as arguments.
@@ -175,45 +195,56 @@ EOL
 	echo travis_fold:end:scijava-maven
 fi
 
-# Configure conda environment, if one is needed.
-if [ -f environment.yml ]
-then
-	echo travis_fold:start:scijava-conda
-	echo "= Conda setup ="
+# # Configure conda environment, if one is needed.
+# if [ -f environment.yml ]
+# then
+# 	echo travis_fold:start:scijava-conda
+# #	echo "= Conda setup ="
 
-	condaDir=$HOME/miniconda
-	condaSh=$condaDir/etc/profile.d/conda.sh
-	if [ ! -f "$condaSh" ]; then
-		echo
-		echo "== Installing conda =="
-		wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
-		rm -rf "$condaDir"
-		bash miniconda.sh -b -p "$condaDir"
-		checkSuccess $?
-	fi
+# #	wget https://raw.githubusercontent.com/trichter/conda4travis/latest/conda4travis.sh -O conda4travis.sh
+# #	source conda4travis.sh
+	
+# 	# condaDir=$HOME/miniconda
+# 	# condaSh=$condaDir/etc/profile.d/conda.sh
+# 	# if [ ! -f "$condaSh" ]; then
+# 	# 	echo
+# 	# 	echo "== Installing conda =="
+# 	# 	rm -rf "$condaDir"		
+# 	# 	if [ "$TRAVIS_OS_NAME" == "osx" ]; then
+# 	# 	    wget -q https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh -O miniconda.sh
+# 	# 	    bash miniconda.sh -b -p "$condaDir"		    
+# 	# 	elif [ "$TRAVIS_OS_NAME" == "windows" ]; then
+# 	# 	    wget -q https://repo.anaconda.com/miniconda/Miniconda3-latest-Windows-x86_64.exe -O miniconda.exe
+		    
+# 	# 	else
+# 	# 	    wget -q https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
+# 	# 	    bash miniconda.sh -b -p "$condaDir"
+# 	# 	fi
+# 	# 	checkSuccess $?
+# 	# fi
 
-	echo
-	echo "== Updating conda =="
-	. "$condaSh" &&
-	conda config --set always_yes yes --set changeps1 no &&
-	conda update -q conda &&
-	conda info -a
-	checkSuccess $?
+# 	# echo
+# 	# echo "== Updating conda =="
+# 	# . "$condaSh" &&
+# 	# conda config --set always_yes yes --set changeps1 no &&
+# 	# conda update -q conda &&
+# 	# conda info -a
+# 	# checkSuccess $?
 
-	echo
-	echo "== Configuring environment =="
-	condaEnv=travis-scijava
-	test -d "$condaDir/envs/$condaEnv" && condaAction=update || condaAction=create
-	conda env "$condaAction" -n "$condaEnv" -f environment.yml &&
-	conda activate "$condaEnv"
-	checkSuccess $?
+# 	echo
+# 	echo "== Configuring environment =="
+# 	condaEnv=travis-scijava
+# 	test -d "$condaDir/envs/$condaEnv" && condaAction=update || condaAction=create
+# 	conda env "$condaAction" -n "$condaEnv" -f environment.yml &&
+# 	conda activate "$condaEnv"
+# 	checkSuccess $?
 
-	echo
-	echo "== Run CI code =="
-	python3 .travis/ci.py
+# 	echo
+# 	echo "== Run CI code =="
+# 	python3 .travis/ci.py
 
-	echo travis_fold:end:scijava-conda
-fi
+# 	echo travis_fold:end:scijava-conda
+# fi
 
 # Execute Jupyter notebooks.
 if which jupyter >/dev/null 2>/dev/null
@@ -239,5 +270,9 @@ then
 	})
 	echo travis_fold:end:scijava-jupyter
 fi
+
+echo
+echo "== Run CI code =="
+python3 .travis/ci.py
 
 exit $success

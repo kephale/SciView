@@ -437,7 +437,6 @@ public class SciView extends SceneryBase implements CalibratedRealInterval<Calib
             getLogger().info("imagej-launcher not found, not touching renderer preferences.");
         }
 
-        // TODO: check for jdk 8 v. jdk 11 on linux and choose renderer accordingly
         if( Platform.get() == Platform.LINUX ) {
             String version = System.getProperty("java.version");
             if( version.startsWith("1.") ) {

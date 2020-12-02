@@ -1,0 +1,16 @@
+cache:
+  paths:
+    - maven.repository/
+ 
+variables:
+  MAVEN_OPTS: "-Dmaven.repo.local=maven.repository -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=WARN -Xmx4g -Dorg.lwjgl.util.Debug=true -Dorg.lwjgl.util.DebugLoader=true"
+  JAVA_HOME: "/usr/lib/jvm/java-8-openjdk-amd64"
+ 
+# simple unit tests without requiring GPUs
+test-and-deploy:
+  image: ubuntu:bionic
+  before_script:
+    - apt-get update -qq --force-yes > /dev/null
+    - apt-get install -qq -y --allow-downgrades --allow-remove-essential --allow-change-held-packages unzip wget git maven openjdk-8-jdk-headless curl libgl1-mesa-glx gnupg2 python3 > /dev/null
+  script:
+    - python3 .travis/pre_ci.py

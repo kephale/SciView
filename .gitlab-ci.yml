@@ -11,6 +11,6 @@ test-and-deploy:
   image: ubuntu:bionic
   before_script:
     - apt-get update -qq --force-yes > /dev/null
-    - apt-get install -qq -y --allow-downgrades --allow-remove-essential --allow-change-held-packages unzip wget git maven openjdk-8-jdk-headless curl libgl1-mesa-glx gnupg2 python3 > /dev/null
+    - apt-get install -qq -y --allow-downgrades --allow-remove-essential --allow-change-held-packages gawk unzip wget git maven openjdk-8-jdk-headless curl libgl1-mesa-glx gnupg2 python3 > /dev/null
   script:
     - python3 .travis/pre_ci_gitlab.py

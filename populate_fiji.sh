@@ -100,10 +100,10 @@ joglJar=$(echo $FijiDirectory/jars/jogl-all-main-*.jar)
 joglVersion=$(mid "$joglJar" "-" ".jar")
 install "org.jogamp.jogl:jogl-all:$joglVersion" $FijiDirectory/jars
 
-joclGAV=$(mvn dependency:tree | grep jocl | awk -e '{print $NF}' | cut -d: -f1-4 | sed 's/:jar//g')
+joclGAV=$(mvn dependency:tree | grep jocl | gawk -e '{print $NF}' | cut -d: -f1-4 | sed 's/:jar//g')
 installWithGroupId "$joclGAV" $FijiDirectory/jars
 
-jinputGAV=$(mvn dependency:tree | grep jinput | head -n1 | awk -e '{print $NF}' | cut -d: -f1-4 | sed 's/:jar//g' | sed 's/:compile//g')
+jinputGAV=$(mvn dependency:tree | grep jinput | head -n1 | gawk -e '{print $NF}' | cut -d: -f1-4 | sed 's/:jar//g' | sed 's/:compile//g')
 install "$jinputGAV" $FijiDirectory/jars
 installWithGroupId "$jinputGAV:jar:natives-all" $FijiDirectory/jars/win64
 installWithGroupId "$jinputGAV:jar:natives-all" $FijiDirectory/jars/linux64
@@ -111,7 +111,7 @@ installWithGroupId "$jinputGAV:jar:natives-all" $FijiDirectory/jars/macosx
 echo "--> Removing jinput natives from JAR root"
 (set -x; rm -f $FijiDirectory/jars/jinput-*-natives-all.jar)
 
-ffmpegGAV=$(mvn dependency:tree | grep 'ffmpeg:jar' | head -n1 | awk -e '{print $NF}' | cut -d: -f1-4 | sed 's/:jar//g' | sed 's/:compile//g')
+ffmpegGAV=$(mvn dependency:tree | grep 'ffmpeg:jar' | head -n1 | gawk -e '{print $NF}' | cut -d: -f1-4 | sed 's/:jar//g' | sed 's/:compile//g')
 installWithGroupId "$ffmpegGAV" $FijiDirectory/jars
 installWithGroupId "$ffmpegGAV:jar:windows-x86_64" $FijiDirectory/jars/win64
 installWithGroupId "$ffmpegGAV:jar:linux-x86_64" $FijiDirectory/jars/linux64

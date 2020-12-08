@@ -20,7 +20,7 @@ print('Starting build')
 key_name = 'encrypted_eb7aa63bf7ac_key'
 key_iv = 'encrypted_eb7aa63bf7ac_iv'
 
-subprocess.check_call(['bash', 'travis-build.sh'])
+subprocess.check_call(['bash', 'travis-build-gitlab.sh'])
 
 # Setup conda environment
 # def build_conda():

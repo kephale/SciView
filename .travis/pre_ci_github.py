@@ -45,9 +45,9 @@ if ( key_name in os.environ ) and ( key_iv in os.environ ):# if encrypted keys i
     build_var1 = os.environ[key_name]
     build_var2 = os.environ[key_iv]
 
-    subprocess.check_call(['bash', 'travis-build.sh', build_var1, build_var2])
+    subprocess.check_call(['bash', 'travis-build-github.sh', build_var1, build_var2])
 else:
-    subprocess.check_call(['bash', 'travis-build.sh'])
+    subprocess.check_call(['bash', 'travis-build-github.sh'])
 
 # Setup conda environment
 # def build_conda():

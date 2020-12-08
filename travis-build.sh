@@ -123,23 +123,25 @@ EOL
 	fi
 
 	# Import the GPG signing key.
-	keyFile=.travis/signingkey.asc
-	key=$1
-	iv=$2
-	if [ "$key" -a "$iv" -a -f "$keyFile.enc" ]
-	then
-		# NB: Key and iv values were given as arguments.
-		echo
-		echo "== Decrypting GPG keypair =="
-		openssl aes-256-cbc -K "$key" -iv "$iv" -in "$keyFile.enc" -out "$keyFile" -d
-		checkSuccess $?
-	fi
-	if [ "$deployOK" -a -f "$keyFile" ]
-	then
-		echo
-		echo "== Importing GPG keypair =="
-		gpg --batch --fast-import "$keyFile"
-		checkSuccess $?
+	if [ "$#" -ne 1 ]; then
+	      keyFile=.travis/signingkey.asc
+  	      key=$1
+	      iv=$2
+	      if [ "$key" -a "$iv" -a -f "$keyFile.enc" ]
+	      then
+		  # NB: Key and iv values were given as arguments.
+		  echo
+		  echo "== Decrypting GPG keypair =="
+		  openssl aes-256-cbc -K "$key" -iv "$iv" -in "$keyFile.enc" -out "$keyFile" -d
+		  checkSuccess $?
+	      fi
+	      if [ "$deployOK" -a -f "$keyFile" ]
+	      then
+		  echo
+		  echo "== Importing GPG keypair =="
+		  gpg --batch --fast-import "$keyFile"
+		  checkSuccess $?
+	      fi
 	fi
 
 	# Run the build.

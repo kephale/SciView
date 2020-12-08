@@ -13,7 +13,6 @@ print('')
 #print('Repo: %s' % os.environ['TRAVIS_REPO_SLUG'])
 print('Branch: %s' % branch)
 print('Release?: %s' % str(release_properties_exists))
-print('Is Pull Request?: %s' % is_PR)
 print('Commit: %s' % commit_message)
 
 # Perform main build

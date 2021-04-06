@@ -6,5 +6,5 @@ gradle.rootProject {
     description = "Scenery-backed 3D visualization package for ImageJ."
 }
 
-if (System.getProperty("CI") == "false")
-    includeBuild("../scenery")
+//if (System.getProperty("CI") == "false")
+//    includeBuild("../scenery")
